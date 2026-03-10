@@ -34,8 +34,10 @@ Each entry follows this structure:
 ```markdown
 ## [YYYY-MM-DD] Brief descriptive title
 
-**Category:** `architecture` | `milestone` | `takeaway` | `strategy`  
+**Category:** `feature` | `bugfix` | `refactor` | `infrastructure` | `security` | `milestone` | `strategy`
 **Tags:** `relevant`, `topic`, `tags`
+**Risk Level:** `low` | `med` | `high`
+**Breaking Change:** `yes` | `no`
 
 ### Summary
 A 1-2 sentence overview of what happened or was decided.
@@ -44,9 +46,11 @@ A 1-2 sentence overview of what happened or was decided.
 Full context including:
 - What was decided or accomplished
 - Why this approach was chosen
-- What alternatives were considered (and why they were rejected)
 - Dependencies or implications for future work
 - Any open questions or follow-ups
+
+### Decisions Made
+Explicit trade-off decisions recorded here — what options were evaluated, what was chosen, and why alternatives were rejected.
 
 ### Related
 - Links to related entries, documents, or resources when applicable
@@ -56,13 +60,35 @@ Full context including:
 
 Choose the category that best fits each entry:
 
-- **`architecture`** — Technical design decisions, data model changes, stack choices, API design, infrastructure decisions. The "how we're building it" entries. Example: choosing SQLAlchemy over raw SQL, restructuring the data model for Crusade rules compliance.
+- **`feature`** — New capability or user-facing functionality added to the project.
 
-- **`milestone`** — Completed work, version releases, phase transitions, significant deliverables. The "what we shipped" entries. Example: completing the Data Model v1.2 specification, finishing development environment setup.
+- **`bugfix`** — A defect was identified and resolved.
 
-- **`takeaway`** — Key insights from conversations, lessons learned, important context that should persist. The "what we learned" entries. Example: discovering that the kill log UI needs a quick-add interface for mobile efficiency.
+- **`refactor`** — Internal restructuring with no behavior change (code quality, naming, structure). Use this for what was previously called `architecture`.
 
-- **`strategy`** — Business decisions, market positioning, pricing changes, go-to-market pivots, competitive analysis conclusions. The "why we're doing it this way" entries. Example: pivoting from competing with existing tools to targeting new players entering through video games.
+- **`infrastructure`** — Build system, CI/CD, deployment, tooling, or dependency changes.
+
+- **`security`** — Security hardening, vulnerability fixes, auth changes, secrets management, access control.
+
+- **`milestone`** — Completed phase, release, or significant deliverable. The "what we shipped" entries.
+
+- **`strategy`** — Business decisions, market positioning, pricing changes, go-to-market pivots, competitive analysis conclusions. The "why we're doing it this way" entries. Use for purely non-technical context.
+
+## Fields Explained
+
+### Risk Level
+Describes the blast radius and reversibility of the change:
+- `low` — Isolated change, easy to revert, no shared state affected
+- `med` — Touches shared code, multiple files, or has integration dependencies
+- `high` — Affects shared infrastructure, auth, data models, or production systems
+
+### Breaking Change
+Whether this update changes a public contract, API, CLI behavior, or file format:
+- `yes` — Existing consumers must update to remain compatible
+- `no` — Backwards compatible, no consumer changes required
+
+### Decisions Made
+A dedicated section for recording explicit trade-off decisions: what options were evaluated, what was chosen, and why alternatives were rejected. Acts as a lightweight ADR (Architecture Decision Record) inline with the log entry. Populate this whenever an alternative approach was considered — even briefly — to prevent re-litigating settled decisions in future sessions.
 
 ## When to Create Entries
 
@@ -202,3 +228,5 @@ If a conversation covers several loggable topics, batch them:
 - Include the "why" for every "what" — rationale is the most valuable part
 - Reference related devlog entries by date when they exist
 - Keep tags lowercase, hyphenated, and specific enough to be useful for searching
+- Set `Risk Level: high` any time the change touches authentication, secrets, data models, CI/CD pipelines, or production infrastructure
+- Populate `Decisions Made` whenever an alternative approach was considered and rejected — even briefly. The goal is to prevent re-litigating settled decisions in future sessions.
